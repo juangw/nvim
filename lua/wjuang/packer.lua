@@ -32,6 +32,9 @@ return require('packer').startup(function(use)
           vim.cmd("colorscheme tokyonight")
       end
   })
+  use("nvim-pack/nvim-spectre")
+  use("airblade/vim-gitgutter")
+  use("f-person/git-blame.nvim")
 
   use {
 	  'VonHeikemen/lsp-zero.nvim',
