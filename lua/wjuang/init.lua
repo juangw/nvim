@@ -1,3 +1,2 @@
-require("wjuang.remap")
-require("wjuang.set")
-require("wjuang.packer")
+require("wjuang.config")
+require("wjuang.lazy")
