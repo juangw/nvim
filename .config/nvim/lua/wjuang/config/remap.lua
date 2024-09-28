@@ -34,7 +34,6 @@ vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
-vim.keymap.set("n", "<leader>vpp", "<cmd>e ~/.dotfiles/nvim/.config/nvim/lua/theprimeagen/packer.lua<CR>");
 vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>");
 
 vim.keymap.set("n", "<leader>fc", "<CMD>Telescope commands<CR>")
@@ -44,6 +43,23 @@ vim.keymap.set("n", "<leader>km", "<CMD>Telescope keymaps<CR>")
 
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
+end)
+
+vim.keymap.set("v", "ghl", function()
+    local line_start = vim.fn.getpos("v")[2];
+    local line_end = vim.fn.getpos(".")[2];
+    local current_file_name = vim.api.nvim_buf_get_name(0);
+    -- assumes that repos are in src folder
+    local cleaned_local_file_name = string.match(current_file_name, "/src/[%w_-]+/([%w%p]*)");
+    local git_config_remote_origin = vim.fn.system("git config --get remote.origin.url");
+    local github_account_repo;
+    if string.match(git_config_remote_origin, '^https://') then
+        github_account_repo = string.match(git_config_remote_origin, 'https://github.com/(.*).git');
+    else
+        github_account_repo = string.match(git_config_remote_origin, ':(.*).git');
+    end
+    local github_link = "https://github.com/" .. github_account_repo .. "/blob/master/" .. cleaned_local_file_name .. "#L" .. line_start .. "-L" .. line_end;
+    vim.api.nvim_call_function("netrw#BrowseX", { github_link, 0 })
 end)
 
 vim.api.nvim_create_autocmd("LspAttach", {
